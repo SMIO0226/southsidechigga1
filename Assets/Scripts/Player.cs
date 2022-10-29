@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
+        StartCoroutine(KeepShooting()); 
     }
 
     void Update()
@@ -61,5 +63,43 @@ public class Player : MonoBehaviour
     {
         // 產生出子彈
         Instantiate(bulletPrefab, firePoint.transform.position, transform.rotation);
+    }
+
+    IEnumerator KeepShooting()
+    {
+    while(true)
+
+     {
+            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+
+            float miniDist = 99999;
+
+            GameObject miniEnemy = null;
+
+             foreach (GameObject enemy in enemys)
+            {
+
+             float d = Vector3.Distance(transform.position, enemy.transform.position);
+
+
+                if (d < miniDist)
+                {
+                    miniDist = d;
+                    miniEnemy = enemy;
+                }
+
+            }  
+
+            if (miniEnemy)
+            {
+
+                miniEnemy.transform.localScale = new Vector3(2, 2, 2);
+            }
+
+        Fire();
+
+        yield return new WaitForSeconds(0.5f);
+        }
+
     }
 }
